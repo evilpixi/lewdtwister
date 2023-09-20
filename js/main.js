@@ -3,7 +3,7 @@ class g {}
 g.width = 480
 g.height = 288
 // --------------------- DEBUG TOOLS --------------------- 
-g.debugMode = 1
+g.debugMode = 0
 
 // --------------------- GAME CONFIG --------------------- 
 g.gameConfig = {

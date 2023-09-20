@@ -37,10 +37,10 @@ class Character extends Phaser.GameObjects.Container
         this.gender = config?.gender || "f"
         this.sex = config?.sex || "f"
         this.name = config?.name || "Player"
+        this.hairstyle = config?.hairstyle || 0
         this.skincolor = config?.skincolor || ColorUtil.parseHex(SkinColors.WHITE)
         this.color = config?.color || ColorUtil.parseHex(Colors.GREEN)
         this.eyescolor = config?.eyescolor || ColorUtil.parseHex(Colors.PURPLE)
-        this.hairstyle = config?.hairstyle || 0
 
         this.sexualorientation = config?.sexualorientation || {
             likesMale: false,
@@ -50,6 +50,23 @@ class Character extends Phaser.GameObjects.Container
         }
     }
 
+    static likes(currentCharacter, otherCharacter)
+    {
+        let desiredGenitalia = []
+        if (currentCharacter.sexualorientation.likesPenis) desiredGenitalia.push("m")
+        if (currentCharacter.sexualorientation.likesVagina) desiredGenitalia.push("f")
+
+        let likesGenitalia = desiredGenitalia.includes(otherCharacter.sex)
+        if (!likesGenitalia) return false
+
+        let desiredGenders = []
+        if (currentCharacter.sexualorientation.likesFemale) desiredGenders.push("f")
+        if (currentCharacter.sexualorientation.likesMale) desiredGenders.push("m")
+
+        let likesGender = desiredGenders.includes(otherCharacter.gender)
+        return likesGender
+    }
+
     getConfig()
     {
         return {
@@ -57,6 +74,7 @@ class Character extends Phaser.GameObjects.Container
             gender: this.gender,
             sex: this.sex,
             name: this.name,
+            hairstyle: this.hairstyle,
             skincolor: this.skincolor,
             color: this.color,
             eyescolor: this.eyescolor,

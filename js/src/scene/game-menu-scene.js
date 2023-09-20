@@ -8,11 +8,11 @@ class GameMenuScene extends Phaser.Scene
     create() 
     {
         this.cameras.main.setBackgroundColor('#eeeeee');
-        this.playerAmount = 0
+        this.playerAmount = g.players.elements.length
         this.playerCardList = []
 
         this.playButton = new Button(this, g.width, g.height/2, "button-play", ()=> {
-            this.scene.start("GamePlayScene")
+            this.scene.start("GameplayScene")
         }).setOrigin(1, 0.5)
 
         this.add.text(g.width/2, 6, "CHARACTER CREATION", {
@@ -57,7 +57,6 @@ class GameMenuScene extends Phaser.Scene
             this.grid.placeObjectAtIndex(newPlayerCard, i)
             this.playerCardList.push(newPlayerCard)
         }
-        console.table(g.players.elements)
 
         this.updateUIElements()
     }
@@ -70,8 +69,11 @@ class GameMenuScene extends Phaser.Scene
 
     updateUIElements() 
     {
-        if (this.playerAmount >= this.grid.rows * this.grid.columns)
+        let maxPlayersAmount = this.grid.rows * this.grid.cols
+        if (this.playerAmount >= maxPlayersAmount)
+        {
             this.addButton.setVisible(false)
+        }
         else
         {
             this.grid.placeObjectAtIndex(this.addButton, this.playerAmount)

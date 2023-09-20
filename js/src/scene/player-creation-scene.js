@@ -71,9 +71,7 @@ class PlayerCreationScene extends Phaser.Scene
         })
         this.nextHairButton = new Button(this, 320, 80, "button-right", () => {
             this.currentHair++
-            console.log(this.currentHair)
             if (this.currentHair == hairdoAmount) this.currentHair = 0
-            console.log(this.currentHair)
             this.charConfig.hairstyle = this.currentHair
             this.char.setConfig(this.charConfig)
             this.char.updateSprites()
@@ -213,8 +211,8 @@ class PlayerCreationScene extends Phaser.Scene
         this.panel.add(this.likesPenisSwitch)
         this.panel.add(this.likesVaginaSwitch)
 
-        
-        let graphics = this.add.graphics()
+        // for making the creation lines
+        /*let graphics = this.add.graphics()
         const gridSize = 32; // Tamaño de cada celda
         graphics.lineStyle(1, 0x00ff00);
         for (let x = 0; x <= g.width; x += gridSize) {
@@ -230,7 +228,7 @@ class PlayerCreationScene extends Phaser.Scene
             graphics.closePath();
             graphics.strokePath();
         }
-        this.panel.add(graphics)
+        this.panel.add(graphics)*/
 
         this.animateIn()
     }

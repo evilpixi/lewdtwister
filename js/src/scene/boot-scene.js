@@ -74,6 +74,10 @@ class BootScene extends Phaser.Scene
             frameWidth: 32,
             frameHeight: 32
         })
+        this.load.spritesheet("button-spin", "assets/ui/button-spin.png", {
+            frameWidth: 32,
+            frameHeight: 32
+        })
 
         // character stuff
         this.load.spritesheet("hair", "assets/char/hair.png", {
@@ -113,6 +117,70 @@ class BootScene extends Phaser.Scene
         }
 
         g.players = new PlayerList()
+        /*g.players.add({
+            specie: "squid",
+            gender: "f",
+            sex: "f",
+            name: "scoot",
+            hairstyle: 0,
+            skincolor: ColorUtil.parseHex(SkinColors.WHITE),
+            color: ColorUtil.parseHex(Colors.GREEN),
+            eyescolor: ColorUtil.parseHex(Colors.GREEN),
+            sexualorientation: {
+                likesMale: true,
+                likesFemale: true,
+                likesPenis: true,
+                likesVagina: true
+            }
+        })
+        g.players.add({
+            specie: "squid",
+            gender: "f",
+            sex: "m",
+            name: "pixi",
+            hairstyle: 2,
+            skincolor: ColorUtil.parseHex(SkinColors.TAN),
+            color: ColorUtil.parseHex(Colors.ORANGE),
+            eyescolor: ColorUtil.parseHex(Colors.PURPLE),
+            sexualorientation: {
+                likesMale: true,
+                likesFemale: true,
+                likesPenis: true,
+                likesVagina: true
+            }
+        })
+        g.players.add({
+            specie: "squid",
+            gender: "m",
+            sex: "m",
+            name: "daisy",
+            hairstyle: 3,
+            skincolor: ColorUtil.parseHex(SkinColors.WHITE),
+            color: ColorUtil.parseHex(Colors.SAKURA),
+            eyescolor: ColorUtil.parseHex(Colors.YELLOW),
+            sexualorientation: {
+                likesMale: true,
+                likesFemale: true,
+                likesPenis: true,
+                likesVagina: true
+            }
+        })
+        g.players.add({
+            specie: "squid",
+            gender: "m",
+            sex: "m",
+            name: "jdawg",
+            hairstyle: 4,
+            skincolor: ColorUtil.parseHex(SkinColors.BASSIST),
+            color: ColorUtil.parseHex(Colors.YELLOW),
+            eyescolor: ColorUtil.parseHex(Colors.RED),
+            sexualorientation: {
+                likesMale: false,
+                likesFemale: true,
+                likesPenis: false,
+                likesVagina: true
+            }
+        })*/
     }
 
     update() 

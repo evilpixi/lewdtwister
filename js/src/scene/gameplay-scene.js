@@ -5,88 +5,197 @@ class GameplayScene extends Phaser.Scene {
 
     create() 
     {
-        let ARROW_CENTER = { x: g.height / 2, y: g.height /2 }
-
         this.cameras.main.setBackgroundColor('#eeeeee');
-        this.colorButtons = []
-        this.colors = []
-        this.colorCircles = []
+        this.board = new Board(this, g.width - 16, g.height)
 
-        //this.board = new Board
-        this.add.circle(ARROW_CENTER.x, ARROW_CENTER.y, 78, 0xaaaaaa)
-        this.add.circle(ARROW_CENTER.x, ARROW_CENTER.y, 75, 0xeeeeee)
+        this.gameinfo = {
+            players: g.players.elements.lenght,
+            currentTurn: 0,
+            nextTurn: 0,
+            isSpinning: false,
+            startRotationSpeed: 0.006,
+            rotationSpeed: 0,
+            breakSpeed: 0.000045,
+            rotationTime: 1000,
+            extraTime: 0,
+            currentRotationTime: 0
+        }
+        this.gameinfo.nextTurn = this.getNext()
 
-        this.arrow = new Arrow(this, ARROW_CENTER.x, ARROW_CENTER.y)
+        this.currentTurnText = this.add.text(128, 8, "#############'s turn", {
+            fontFamily: "ps2p",
+            fontSize: 18,
+            resolution: 18,
+            color: "#000000"
+        })
+        this.currentTurnText.setScale(0.5, 1)
 
-        for (let i=0; i<12; i++)
+        
+        this.spinButton = new Button(this, 64, 240, "button-spin", () => {
+            this.spin()
+        }, 2)
+        this.spinButton.setTint(ColorUtil.parseHex(Colors.GREEN))
+
+        this.playButton = new Button(this, 134, 240, "button-right", () => {
+            this.play()
+        }, 1.5)
+        this.playButton.setTint(ColorUtil.parseHex(Colors.GREEN))
+        this.playButton.visible = false
+
+        this.updateCurrentPlayer()
+        this.prepareTurn()
+
+        // --- lines ---
+        let show = false
+        if (show)
         {
-            if (i%2 == 0)
-            {
-                this.colors.push("ORANGE")
-            }
-            else {
-                this.colors.push("LIGHTGREEN")
+            let graphics = this.add.graphics()
+            const gridSize = 32; // Tamaño de cada celda
+            graphics.lineStyle(1, 0x00ff00);
+            for (let x = 0; x <= g.width; x += gridSize) {
+                graphics.beginPath();
+                graphics.moveTo(x, 0);
+                graphics.lineTo(x, g.height);
+                graphics.closePath();
+                graphics.strokePath();
+    
+                graphics.beginPath();
+                graphics.moveTo(0, x);
+                graphics.lineTo(g.width, x);
+                graphics.closePath();
+                graphics.strokePath();
             }
         }
-
-        this.addCirclesAround(ARROW_CENTER.x, ARROW_CENTER.y, 12, 110, this.colors)
-        //this.createButtons()
     }
 
-    addCirclesAround(x, y, amount, radius, colorList) 
+    prepareTurn()
     {
-        let angInc = (2 * Math.PI) / amount
+        let posibilities = []
+        let bodyParts = ["cum", "oral", "hands", "tongue", "grope", "spank", "be creative"]
 
-        for (let i = 0; i < amount; i++)
+        let currentPlayer = g.players.elements[this.gameinfo.currentTurn]
+        if (currentPlayer.sex == "m")
         {
-            let ang = i * angInc
-
-            let newCircle = this.add.circle(
-                x + radius * Math.cos(ang),
-                y + radius * Math.sin(ang),
-                24,
-                ColorUtil.parseHex(Colors[colorList[i]])
-            )
-
-            //newCircle.alp
-            this.colorCircles.push(newCircle)
+            bodyParts.push("penis")
+            bodyParts.push("anal")
         }
-    }
-
-    createButtons() 
-    {
-        let colorList = Object.entries(Colors)
-        let j = 0
-        let buttons_x = 20
-        let buttons_y = 40
-        for (let i = 0; i < colorList.length; i++)
+        if (currentPlayer.sex == "f")
         {
-            let newButton = new ColorButton(
-                this, 
-                buttons_x, 
-                buttons_y, 
-                colorList[i][1], 
-                () => {
-                    console.log(colorList[i][0] + ": " + colorList[i][1])
-                }
-            )
-            newButton.name = "color_" + 
-            
-            this.colorButtons.push(newButton)
-            
-            buttons_x += 40
-            j++
-            if (j > 12)
+            bodyParts.push("strap-on")
+        }
+        if (currentPlayer.gender == "f")
+        {
+            bodyParts.push("tits")
+        }
+
+        for (let part of bodyParts)
+        {
+            for (let candidate of this.getCandidates())
             {
-                j = 0
-                buttons_y += 40
-                buttons_x = 20
+                posibilities.push({
+                    part: part,
+                    name: candidate.name,
+                    player: candidate
+                })
             }
         }
+
+        this.board.updatePosibilities(posibilities)
+    }
+
+    play()
+    {
+        this.playButton.visible = false
+        this.spinButton.visible = true
+        this.updateCurrentPlayer()
+        this.prepareTurn()
+    }
+
+    spin()
+    {
+        this.spinButton.visible = false
+
+        // spin
+        this.gameinfo.isSpinning = true
+        this.gameinfo.rotationSpeed = this.gameinfo.startRotationSpeed
+        this.gameinfo.extraTime = Math.random() * 1500
+        this.gameinfo.currentRotationTime = 0
+
+    }
+
+    endSpin()
+    {
+        this.playButton.visible = true
+        this.spinButton.visible = true
+        this.gameinfo.currentTurn = this.getNext()
+        this.gameinfo.nextTurn = this.getNext()
+    }
+
+    getNext()
+    {
+        let next = this.gameinfo.currentTurn
+        next++
+        if (next >= g.players.elements.length)
+        {
+            next = 0
+        }
+        return next
+    }
+
+    getCandidates()
+    {
+        let players = g.players.elements
+        let candidates = []
+        let turnPlayer = players[this.gameinfo.currentTurn]
+
+        for (let i = 0; i < players.length; i++)
+        {
+            if (i == this.gameinfo.currentTurn) continue
+
+            let currentPlayer = players[i]
+
+            if (Character.likes(turnPlayer, currentPlayer) && Character.likes(currentPlayer, turnPlayer))
+            {
+                candidates.push(currentPlayer)
+            }
+        }
+
+        return candidates
+    }
+
+    updateCurrentPlayer()
+    {
+        this.nextChar?.destroy()
+        this.nextChar = new Character(this, 150, 96, g.players.elements[this.gameinfo.nextTurn])
+
+        this.transparentRect?.destroy()
+        this.transparentRect = this.add.rectangle(150, 96, 70, 70, 0xeeeeee, 0.5)
+
+        this.currentChar?.destroy()
+        this.currentChar = new Character(this, 86, 80, g.players.elements[this.gameinfo.currentTurn])
+        this.currentChar.scale = 2
+
+        this.currentTurnText.setText(g.players.elements[this.gameinfo.currentTurn].name + "'s turn")
     }
 
     update(t, d) 
     {
-        this.arrow.angle += d/2
+        if (this.gameinfo.isSpinning)
+        {
+            this.board.update(t, d, this.gameinfo.rotationSpeed)
+            this.gameinfo.currentRotationTime += d
+
+            if (this.gameinfo.currentRotationTime > this.gameinfo.rotationTime + this.gameinfo.extraTime)
+            {
+                this.gameinfo.rotationSpeed -= this.gameinfo.breakSpeed
+            }
+
+            if (this.gameinfo.rotationSpeed < 0) 
+            {
+                this.gameinfo.rotationSpeed = 0
+                this.gameinfo.isSpinning = false
+                this.endSpin()
+            }
+        }
     }
 }
