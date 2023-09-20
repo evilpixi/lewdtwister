@@ -90,7 +90,15 @@ class GameplayScene extends Phaser.Scene {
 
         for (let part of bodyParts)
         {
-            for (let candidate of this.getCandidates())
+            let candidates = this.getCandidates()
+            console.log(candidates)
+            if (candidates.length == 0)
+            {
+                candidates.push(currentPlayer)
+                candidates.push(currentPlayer)
+            }
+            console.log(candidates)
+            for (let candidate of candidates)
             {
                 posibilities.push({
                     part: part,
@@ -99,6 +107,7 @@ class GameplayScene extends Phaser.Scene {
                 })
             }
         }
+
 
         this.board.updatePosibilities(posibilities)
     }

@@ -46,6 +46,7 @@ class Board extends Phaser.GameObjects.Container
         this.colorCircles = []
 
         this.posibilities = posibilities
+        console.log(this.posibilities)
         this.nextPosibility = 0
         this.addCirclesAround(16, this.radius)
     }
